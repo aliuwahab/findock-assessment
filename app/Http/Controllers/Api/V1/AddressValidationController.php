@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Resources\ValidationResultResource;
 use App\Models\CsvUpload;
+use App\Support\Filters\AddressValidationFilters;
+use App\Support\Filters\FilterBuilder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -19,17 +21,9 @@ class AddressValidationController extends ApiController
 
         $query = $upload->csvFields();
 
-        if ($request->has('status')) {
-            $query->where('validation_status', $request->input('status'));
-        }
+        $query = FilterBuilder::apply($query, (new AddressValidationFilters($request))->get());
 
-        if ($request->has('search')) {
-            $search = $request->input('search');
-            $query->whereRaw('JSON_EXTRACT(field_data, "$.address") LIKE ?', ["%{$search}%"]);
-        }
-
-        $results = $query->orderBy('created_at', 'desc')
-            ->paginate(50);
+        $results = $query->orderBy('created_at', 'desc')->paginate(50);
 
         return $this->successResponse([
             'results' => ValidationResultResource::collection($results),
