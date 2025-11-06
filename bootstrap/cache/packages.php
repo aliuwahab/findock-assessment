@@ -62,6 +62,13 @@
       0 => 'Spatie\\LaravelData\\LaravelDataServiceProvider',
     ),
   ),
+  'spatie/laravel-typescript-transformer' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Spatie\\LaravelTypeScriptTransformer\\TypeScriptTransformerServiceProvider',
+    ),
+  ),
   'spatie/php-structure-discoverer' => 
   array (
     'providers' => 

@@ -35,4 +35,10 @@ return [
         ],
     ],
 
+    'geoapify' => [
+        'api_key' => env('GEOAPIFY_API_KEY'),
+        'base_url' => env('GEOAPIFY_BASE_URL', 'https://api.geoapify.com/v1'),
+        'timeout' => env('GEOAPIFY_TIMEOUT', 10),
+    ],
+
 ];

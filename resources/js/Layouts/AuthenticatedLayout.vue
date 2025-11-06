@@ -39,6 +39,12 @@ const showingNavigationDropdown = ref(false);
                                 >
                                     Dashboard
                                 </NavLink>
+                                <NavLink
+                                    :href="route('csv-uploads.index')"
+                                    :active="route().current('csv-uploads.*')"
+                                >
+                                    CSV Uploads
+                                </NavLink>
                             </div>
                         </div>
 
@@ -145,6 +151,12 @@ const showingNavigationDropdown = ref(false);
                             :active="route().current('dashboard')"
                         >
                             Dashboard
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            :href="route('csv-uploads.index')"
+                            :active="route().current('csv-uploads.*')"
+                        >
+                            CSV Uploads
                         </ResponsiveNavLink>
                     </div>
 

@@ -33,9 +33,11 @@
     29 => 'NunoMaduro\\Collision\\Adapters\\Laravel\\CollisionServiceProvider',
     30 => 'Termwind\\Laravel\\TermwindServiceProvider',
     31 => 'Spatie\\LaravelData\\LaravelDataServiceProvider',
-    32 => 'Spatie\\StructureDiscoverer\\StructureDiscovererServiceProvider',
-    33 => 'Tighten\\Ziggy\\ZiggyServiceProvider',
-    34 => 'App\\Providers\\AppServiceProvider',
+    32 => 'Spatie\\LaravelTypeScriptTransformer\\TypeScriptTransformerServiceProvider',
+    33 => 'Spatie\\StructureDiscoverer\\StructureDiscovererServiceProvider',
+    34 => 'Tighten\\Ziggy\\ZiggyServiceProvider',
+    35 => 'App\\Providers\\AppServiceProvider',
+    36 => 'App\\Providers\\AddressValidationServiceProvider',
   ),
   'eager' => 
   array (
@@ -55,9 +57,11 @@
     13 => 'NunoMaduro\\Collision\\Adapters\\Laravel\\CollisionServiceProvider',
     14 => 'Termwind\\Laravel\\TermwindServiceProvider',
     15 => 'Spatie\\LaravelData\\LaravelDataServiceProvider',
-    16 => 'Spatie\\StructureDiscoverer\\StructureDiscovererServiceProvider',
-    17 => 'Tighten\\Ziggy\\ZiggyServiceProvider',
-    18 => 'App\\Providers\\AppServiceProvider',
+    16 => 'Spatie\\LaravelTypeScriptTransformer\\TypeScriptTransformerServiceProvider',
+    17 => 'Spatie\\StructureDiscoverer\\StructureDiscovererServiceProvider',
+    18 => 'Tighten\\Ziggy\\ZiggyServiceProvider',
+    19 => 'App\\Providers\\AppServiceProvider',
+    20 => 'App\\Providers\\AddressValidationServiceProvider',
   ),
   'deferred' => 
   array (
