@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class CsvField extends Model
 {
-    use hasFactory;
+    use HasFactory;
     protected $fillable = [
         'csv_upload_id',
         'field_data',
