@@ -12,10 +12,12 @@ class CsvField extends Model
         'csv_upload_id',
         'field_data',
         'validation_status',
+        'validation_result',
     ];
 
     protected $casts = [
         'field_data' => 'array',
+        'validation_result' => 'array',
     ];
 
     public function csvUpload()
