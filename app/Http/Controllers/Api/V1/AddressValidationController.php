@@ -24,8 +24,7 @@ class AddressValidationController extends ApiController
 
         $query = FilterBuilder::apply($query, (new AddressValidationFilters($request))->get());
 
-        $results = $query->orderBy('created_at', 'desc')
-            ->paginate(50);
+        $results = $query->orderBy('created_at', 'desc')->paginate(50);
 
         return ValidationResultResource::collection($results);
     }
