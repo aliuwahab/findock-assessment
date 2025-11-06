@@ -2,99 +2,47 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Domain\AddressValidation\Actions\ProcessCsvUploadAction;
-use App\Domain\AddressValidation\Actions\UploadCsvAction;
+use App\Domain\AddressValidation\Repositories\CsvUploadRepository;
+use App\Domain\AddressValidation\Services\CsvUploadService;
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Requests\UploadCsvRequest;
 use App\Http\Resources\CsvUploadResource;
-use App\Jobs\ProcessCsvUploadJob;
 use App\Models\CsvUpload;
 use Illuminate\Http\JsonResponse;
 
 class CsvUploadController extends ApiController
 {
-    private const SYNC_THRESHOLD = 10; // Process synchronously if 10 or fewer addresses
-
     public function __construct(
-        private UploadCsvAction $uploadAction,
-        private ProcessCsvUploadAction $processAction
+        private readonly CsvUploadService $uploadService,
+        private readonly CsvUploadRepository $repository
     ) {}
 
     /**
      * Upload CSV file and process addresses
-     * - Synchronous processing for <= 10 addresses (instant results)
-     * - Asynchronous processing for > 10 addresses (queued with progress tracking)
      */
     public function upload(UploadCsvRequest $request): JsonResponse
     {
-        $upload = $this->uploadAction->execute(
+        $result = $this->uploadService->uploadAndProcess(
             $request->file('file'),
             $request->input('mappings'),
             auth()->id()
         );
 
-        if ($upload->total_rows <= self::SYNC_THRESHOLD) {
-            return $this->processSynchronously($upload, $request->input('mappings'));
-        }
-
-        return $this->processAsynchronously($upload, $request->input('mappings'));
-    }
-
-    /**
-     * Process small CSV synchronously (instant results)
-     */
-    private function processSynchronously(CsvUpload $upload, array $mappings): JsonResponse
-    {
-        try {
-            $upload->update([
-                'status' => 'processing',
-                'processing_started_at' => now(),
-            ]);
-
-            $this->processAction->execute($upload, $mappings);
-
-            $upload->update([
-                'status' => 'completed',
-                'processed_rows' => $upload->total_rows,
-                'processing_completed_at' => now(),
-            ]);
-
-            // TODO: Fire event for completion notification
-
-            return $this->successResponse(
-                [
-                    'processing_mode' => 'synchronous',
-                    'upload' => new CsvUploadResource($upload->refresh()),
-                ],
-                'CSV processed successfully.'
-            );
-
-        } catch (\Exception $e) {
-            $upload->update(['status' => 'failed']);
-
-            // TODO: Fire event for failure notification
-
+        if ($result->hasError()) {
             return $this->serverErrorResponse(
-                'Error processing CSV.',
-                ['error' => $e->getMessage()]
+                $result->message,
+                ['error' => $result->error]
             );
         }
-    }
 
-    /**
-     * Process large CSV asynchronously (queued)
-     */
-    private function processAsynchronously(CsvUpload $upload, array $mappings): JsonResponse
-    {
-        ProcessCsvUploadJob::dispatch($upload, $mappings);
+        $response = [
+            'processing_mode' => $result->processingMode,
+            'upload' => new CsvUploadResource($result->upload),
+        ];
 
-        return $this->acceptedResponse(
-            [
-                'processing_mode' => 'asynchronous',
-                'upload' => new CsvUploadResource($upload),
-            ],
-            'CSV uploaded successfully. Processing in background.'
-        );
+        return $result->isAsynchronous()
+            ? $this->acceptedResponse($response, $result->message)
+            : $this->successResponse($response, $result->message);
     }
 
     /**
@@ -114,9 +62,7 @@ class CsvUploadController extends ApiController
      */
     public function index()
     {
-        $uploads = CsvUpload::where('uploaded_by', auth()->id())
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
+        $uploads = $this->repository->getUserUploads(auth()->id());
 
         return CsvUploadResource::collection($uploads);
     }
