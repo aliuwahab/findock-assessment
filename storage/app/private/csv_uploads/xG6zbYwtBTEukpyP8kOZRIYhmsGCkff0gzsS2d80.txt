@@ -1,0 +1,16 @@
+Address
+1600 Amphitheatre Parkway, Mountain View, CA 94043
+1 Apple Park Way, Cupertino, CA 95014
+410 Terry Avenue North, Seattle, WA 98109
+1 Microsoft Way, Redmond, WA 98052
+350 Fifth Avenue, New York, NY 10118
+221B Baker Street, London, UK
+1600 Pennsylvania Avenue NW, Washington, DC 20500
+10 Downing Street, Westminster, London, UK
+Champ de Mars, 5 Avenue Anatole, Paris, France
+Colosseum, Piazza del Colosseo, Rome, Italy
+Taj Mahal, Agra, Uttar Pradesh, India
+Sydney Opera House, Sydney NSW, Australia
+Christ the Redeemer, Rio de Janeiro, Brazil
+Machu Picchu, Cusco Region, Peru
+Great Wall of China, Huairou District, Beijing, China
