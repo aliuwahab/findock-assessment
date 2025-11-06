@@ -25,7 +25,6 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     
-    // CSV Upload Routes (Web/Inertia)
     Route::prefix('csv-uploads')->name('csv-uploads.')->group(function () {
         Route::post('/', [CsvUploadController::class, 'upload'])->name('store');
         Route::get('/', [CsvUploadController::class, 'index'])->name('index');

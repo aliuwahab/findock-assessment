@@ -34,16 +34,13 @@ class ProcessCsvUploadJob implements ShouldQueue
                 'total_rows' => $this->csvUpload->total_rows,
             ]);
 
-            // Update status to processing
             $this->csvUpload->update([
                 'status' => 'processing',
                 'processing_started_at' => now(),
             ]);
 
-            // Process the CSV using our action
             $processAction->execute($this->csvUpload, $this->mappings);
 
-            // Mark as completed
             $this->csvUpload->update([
                 'status' => 'completed',
                 'processed_rows' => $this->csvUpload->total_rows,
@@ -55,7 +52,6 @@ class ProcessCsvUploadJob implements ShouldQueue
             ]);
 
             // TODO: Fire event for completion notification
-            // event(new CsvProcessingCompletedEvent($this->csvUpload));
 
         } catch (\Exception $e) {
             Log::error('CSV processing failed', [
@@ -64,15 +60,12 @@ class ProcessCsvUploadJob implements ShouldQueue
                 'trace' => $e->getTraceAsString(),
             ]);
 
-            // Mark as failed
             $this->csvUpload->update([
                 'status' => 'failed',
             ]);
 
             // TODO: Fire event for failure notification
-            // event(new CsvProcessingFailedEvent($this->csvUpload, $e));
 
-            // Re-throw to trigger job retry
             throw $e;
         }
     }

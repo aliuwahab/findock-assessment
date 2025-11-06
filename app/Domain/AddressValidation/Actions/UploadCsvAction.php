@@ -20,13 +20,10 @@ class UploadCsvAction
      */
     public function execute(UploadedFile $file, array $mappings, int $userId): CsvUpload
     {
-        // Store file
         $filePath = $file->store('csv_uploads');
 
-        // Estimate row count using Storage path
         $rowCount = $this->csvParser->estimateRowCount($filePath);
 
-        // Create upload record
         $upload = CsvUpload::create([
             'file_name' => $file->getClientOriginalName(),
             'file_path' => $filePath,

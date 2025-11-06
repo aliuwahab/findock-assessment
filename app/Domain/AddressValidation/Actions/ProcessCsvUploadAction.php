@@ -18,10 +18,8 @@ class ProcessCsvUploadAction
 
     public function execute(CsvUpload $csvUpload, array $mappings): void
     {
-        // Use Storage path directly
         $rows = $this->csvParser->parse($csvUpload->file_path);
         
-        // Get existing addresses to avoid duplicates
         $existingAddresses = $this->getExistingAddresses($csvUpload->id);
         
         $recordsToInsert = [];
@@ -34,7 +32,6 @@ class ProcessCsvUploadAction
                 continue;
             }
 
-            // Skip duplicates
             if (in_array($addressField, $existingAddresses)) {
                 Log::info("Duplicate address skipped", ['address' => $addressField]);
                 continue;
@@ -56,7 +53,6 @@ class ProcessCsvUploadAction
                 $existingAddresses[] = $addressField;
                 $processedCount++;
 
-                // Batch insert every 100 records for performance
                 if (count($recordsToInsert) >= 100) {
                     CsvField::insert($recordsToInsert);
                     $recordsToInsert = [];
@@ -70,7 +66,6 @@ class ProcessCsvUploadAction
             }
         }
 
-        // Insert remaining records
         if (!empty($recordsToInsert)) {
             CsvField::insert($recordsToInsert);
         }

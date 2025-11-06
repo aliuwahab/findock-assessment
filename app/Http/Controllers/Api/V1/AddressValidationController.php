@@ -16,16 +16,13 @@ class AddressValidationController extends ApiController
     public function results(Request $request, CsvUpload $upload): JsonResponse
     {
         // TODO: Add policy check
-        // $this->authorize('view', $upload);
 
         $query = $upload->csvFields();
 
-        // Filter by validation status
         if ($request->has('status')) {
             $query->where('validation_status', $request->input('status'));
         }
 
-        // Search by address
         if ($request->has('search')) {
             $search = $request->input('search');
             $query->whereRaw('JSON_EXTRACT(field_data, "$.address") LIKE ?', ["%{$search}%"]);
@@ -51,7 +48,6 @@ class AddressValidationController extends ApiController
     public function statistics(CsvUpload $upload): JsonResponse
     {
         // TODO: Add policy check
-        // $this->authorize('view', $upload);
 
         $total = $upload->csvFields()->count();
         $valid = $upload->csvFields()->where('validation_status', 'valid')->count();

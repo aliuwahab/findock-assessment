@@ -53,7 +53,6 @@ class CsvUploadController extends Controller
     public function show(CsvUpload $upload): Response
     {
         // TODO: Add policy check
-        // $this->authorize('view', $upload);
 
         $fields = $upload->csvFields()->paginate(50);
 
@@ -81,7 +80,6 @@ class CsvUploadController extends Controller
             auth()->id()
         );
 
-        // Decide: sync or async
         if ($upload->total_rows <= self::SYNC_THRESHOLD) {
             return $this->processSynchronously($upload, $request->input('mappings'));
         }

@@ -27,14 +27,12 @@ class CsvUploadController extends ApiController
      */
     public function upload(UploadCsvRequest $request): JsonResponse
     {
-        // Upload file and create record (handled by action)
         $upload = $this->uploadAction->execute(
             $request->file('file'),
             $request->input('mappings'),
             auth()->id()
         );
 
-        // Decide: sync or async based on row count
         if ($upload->total_rows <= self::SYNC_THRESHOLD) {
             return $this->processSynchronously($upload, $request->input('mappings'));
         }
@@ -62,7 +60,6 @@ class CsvUploadController extends ApiController
             ]);
 
             // TODO: Fire event for completion notification
-            // event(new CsvProcessingCompletedEvent($upload));
 
             return $this->successResponse(
                 [
@@ -76,7 +73,6 @@ class CsvUploadController extends ApiController
             $upload->update(['status' => 'failed']);
 
             // TODO: Fire event for failure notification
-            // event(new CsvProcessingFailedEvent($upload, $e));
 
             return $this->serverErrorResponse(
                 'Error processing CSV.',
@@ -107,7 +103,6 @@ class CsvUploadController extends ApiController
     public function show(CsvUpload $upload): JsonResponse
     {
         // TODO: Add policy check
-        // $this->authorize('view', $upload);
 
         return $this->successResponse(
             ['upload' => new CsvUploadResource($upload)]

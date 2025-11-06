@@ -90,3 +90,7 @@
 "} 
 [2025-11-06 13:17:59] local.INFO: Processed 0 addresses for CSV upload {"upload_id":2} 
 [2025-11-06 13:18:57] local.INFO: Processed 5 addresses for CSV upload {"upload_id":3} 
+[2025-11-06 17:04:50] testing.INFO: Processed 5 addresses for CSV upload {"upload_id":1} 
+[2025-11-06 17:04:57] testing.INFO: Processed 1 addresses for CSV upload {"upload_id":1} 
+[2025-11-06 17:07:11] testing.INFO: Processed 5 addresses for CSV upload {"upload_id":1} 
+[2025-11-06 17:07:18] testing.INFO: Processed 1 addresses for CSV upload {"upload_id":1} 
