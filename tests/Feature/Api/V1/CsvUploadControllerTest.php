@@ -203,10 +203,13 @@ class CsvUploadControllerTest extends TestCase
         $response = $this->actingAs($user)->getJson('/api/v1/csv-uploads');
 
         $response->assertStatus(200);
-        $response->assertJsonCount(2, 'data.uploads');
-        
-        // Should only see own uploads
-        $this->assertEquals($user->id, $response->json('data.uploads.0.uploaded_by') ?? null);
+        $response->assertJsonStructure([
+            'data',
+            'links',
+            'meta',
+        ]);
+        $this->assertCount(2, $response->json('data'));
+        $this->assertEquals($user->id, $response->json('data.0.uploaded_by'));
     }
 
     #[Test]

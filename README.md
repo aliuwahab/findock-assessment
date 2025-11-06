@@ -1,4 +1,4 @@
-# PHP Engineer panel assignment
+# PHP Engineer Panel Assignment
 
 ## Quick Start
 

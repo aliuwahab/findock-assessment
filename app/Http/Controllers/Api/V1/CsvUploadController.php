@@ -112,20 +112,12 @@ class CsvUploadController extends ApiController
     /**
      * List user's uploads
      */
-    public function index(): JsonResponse
+    public function index()
     {
         $uploads = CsvUpload::where('uploaded_by', auth()->id())
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
-        return $this->successResponse([
-            'uploads' => CsvUploadResource::collection($uploads),
-            'meta' => [
-                'current_page' => $uploads->currentPage(),
-                'last_page' => $uploads->lastPage(),
-                'per_page' => $uploads->perPage(),
-                'total' => $uploads->total(),
-            ],
-        ]);
+        return CsvUploadResource::collection($uploads);
     }
 }
