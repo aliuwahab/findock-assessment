@@ -2,29 +2,28 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Domain\AddressValidation\Repositories\ValidationResultRepository;
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Resources\ValidationResultResource;
 use App\Http\Resources\ValidationStatisticsResource;
 use App\Models\CsvUpload;
 use App\Support\Filters\AddressValidationFilters;
-use App\Support\Filters\FilterBuilder;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class AddressValidationController extends ApiController
 {
+    public function __construct(
+        private readonly ValidationResultRepository $repository
+    ) {}
+
     /**
      * Get all validation results for a CSV upload
      */
-    public function results(Request $request, CsvUpload $upload): JsonResponse
+    public function results(Request $request, CsvUpload $upload, AddressValidationFilters $filters)
     {
         // TODO: Add policy check
 
-        $query = $upload->csvFields();
-
-        $query = FilterBuilder::apply($query, (new AddressValidationFilters($request))->get());
-
-        $results = $query->orderBy('created_at', 'desc')->paginate(50);
+        $results = $this->repository->getPaginatedResults($upload, $filters->get());
 
         return ValidationResultResource::collection($results);
     }
@@ -36,12 +35,7 @@ class AddressValidationController extends ApiController
     {
         // TODO: Add policy check
 
-        $statistics = (object) [
-            'total' => $upload->csvFields()->count(),
-            'valid' => $upload->csvFields()->where('validation_status', 'valid')->count(),
-            'invalid' => $upload->csvFields()->where('validation_status', 'invalid')->count(),
-            'error' => $upload->csvFields()->where('validation_status', 'error')->count(),
-        ];
+        $statistics = $this->repository->getStatistics($upload);
 
         return new ValidationStatisticsResource($statistics);
     }

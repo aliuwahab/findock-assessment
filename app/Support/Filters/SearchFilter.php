@@ -21,6 +21,7 @@ class SearchFilter implements Filter
      */
     public function handle(Builder $query, \Closure $next): Builder
     {
+        // TODO: Sanitize search input to prevent SQL injection vulnerabilities
         if ($this->request->has('search')) {
             $search = $this->request->input('search');
             $query->whereRaw('JSON_EXTRACT(field_data, "$.address") LIKE ?', ["%{$search}%"]);

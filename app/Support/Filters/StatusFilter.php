@@ -17,11 +17,12 @@ class StatusFilter implements Filter
      * Apply status filter to the query
      *
      * @param Builder $query
-     * @param Closure $next
+     * @param \Closure $next
      * @return Builder
      */
-    public function handle(Builder $query, Closure $next): Builder
+    public function handle(Builder $query, \Closure $next): Builder
     {
+        // TODO: Validate that status value is within allowed enum values (valid, invalid, error)
         if ($this->request->has('status')) {
             $query->where('validation_status', $this->request->input('status'));
         }
