@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Resources\ValidationResultResource;
+use App\Http\Resources\ValidationStatisticsResource;
 use App\Models\CsvUpload;
 use App\Support\Filters\AddressValidationFilters;
 use App\Support\Filters\FilterBuilder;
@@ -23,41 +24,26 @@ class AddressValidationController extends ApiController
 
         $query = FilterBuilder::apply($query, (new AddressValidationFilters($request))->get());
 
-        $results = $query->orderBy('created_at', 'desc')->paginate(50);
+        $results = $query->orderBy('created_at', 'desc')
+            ->paginate(50);
 
-        return $this->successResponse([
-            'results' => ValidationResultResource::collection($results),
-            'meta' => [
-                'current_page' => $results->currentPage(),
-                'last_page' => $results->lastPage(),
-                'per_page' => $results->perPage(),
-                'total' => $results->total(),
-            ],
-        ]);
+        return ValidationResultResource::collection($results);
     }
 
     /**
      * Get statistics for validation results
      */
-    public function statistics(CsvUpload $upload): JsonResponse
+    public function statistics(CsvUpload $upload)
     {
         // TODO: Add policy check
 
-        $total = $upload->csvFields()->count();
-        $valid = $upload->csvFields()->where('validation_status', 'valid')->count();
-        $invalid = $upload->csvFields()->where('validation_status', 'invalid')->count();
-        $error = $upload->csvFields()->where('validation_status', 'error')->count();
+        $statistics = (object) [
+            'total' => $upload->csvFields()->count(),
+            'valid' => $upload->csvFields()->where('validation_status', 'valid')->count(),
+            'invalid' => $upload->csvFields()->where('validation_status', 'invalid')->count(),
+            'error' => $upload->csvFields()->where('validation_status', 'error')->count(),
+        ];
 
-        return $this->successResponse([
-            'statistics' => [
-                'total' => $total,
-                'valid' => $valid,
-                'invalid' => $invalid,
-                'error' => $error,
-                'valid_percentage' => $total > 0 ? round(($valid / $total) * 100, 2) : 0,
-                'invalid_percentage' => $total > 0 ? round(($invalid / $total) * 100, 2) : 0,
-                'error_percentage' => $total > 0 ? round(($error / $total) * 100, 2) : 0,
-            ],
-        ]);
+        return new ValidationStatisticsResource($statistics);
     }
 }
