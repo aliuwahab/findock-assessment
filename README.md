@@ -15,9 +15,6 @@ This will:
 - Run migrations
 - Build frontend assets
 
-### Manual Setup
-See [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) for detailed manual setup instructions.
-
 ### After Setup
 
 1. **Configure Geoapify API Key**:
