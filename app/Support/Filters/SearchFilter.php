@@ -4,6 +4,7 @@ namespace App\Support\Filters;
 
 use App\Support\Filters\Contracts\Filter;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
 
 class SearchFilter implements Filter
@@ -15,11 +16,11 @@ class SearchFilter implements Filter
     /**
      * Apply search filter to the query
      *
-     * @param Builder $query
+     * @param Builder|Relation $query
      * @param \Closure $next
-     * @return Builder
+     * @return Builder|Relation
      */
-    public function handle(Builder $query, \Closure $next): Builder
+    public function handle(Builder|Relation $query, \Closure $next): Builder|Relation
     {
         // TODO: Sanitize search input to prevent SQL injection vulnerabilities
         if ($this->request->has('search')) {

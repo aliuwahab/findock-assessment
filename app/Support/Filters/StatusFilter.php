@@ -5,6 +5,7 @@ namespace App\Support\Filters;
 use App\Support\Filters\Contracts\Filter;
 use Closure;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
 
 class StatusFilter implements Filter
@@ -16,11 +17,11 @@ class StatusFilter implements Filter
     /**
      * Apply status filter to the query
      *
-     * @param Builder $query
+     * @param Builder|Relation $query
      * @param \Closure $next
-     * @return Builder
+     * @return Builder|Relation
      */
-    public function handle(Builder $query, \Closure $next): Builder
+    public function handle(Builder|Relation $query, \Closure $next): Builder|Relation
     {
         // TODO: Validate that status value is within allowed enum values (valid, invalid, error)
         if ($this->request->has('status')) {

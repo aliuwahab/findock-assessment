@@ -6,6 +6,7 @@ use App\Models\CsvUpload;
 use App\Support\Filters\FilterBuilder;
 use App\Support\Filters\FilterCollection;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class ValidationResultRepository
@@ -53,11 +54,11 @@ class ValidationResultRepository
     /**
      * Apply filters to the query using FilterBuilder
      *
-     * @param Builder $query
+     * @param Builder|Relation $query
      * @param FilterCollection $filters
-     * @return Builder
+     * @return Builder|Relation
      */
-    private function applyFilters(Builder $query, FilterCollection $filters): Builder
+    private function applyFilters(Builder|Relation $query, FilterCollection $filters): Builder|Relation
     {
         return FilterBuilder::apply($query, $filters);
     }
